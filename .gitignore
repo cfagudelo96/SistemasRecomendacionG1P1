@@ -1,5 +1,6 @@
 .idea
-.iml
+*.iml
+.gradle
 
 # Ignore Play! working directory #
 bin/
