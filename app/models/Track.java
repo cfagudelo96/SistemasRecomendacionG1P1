@@ -6,16 +6,18 @@ import io.ebean.*;
 import play.data.validation.*;
 
 @Entity
-public class User extends Model {
+public class Track extends Model {
     @Id
     public Long id;
 
     @Constraints.Required
     public String userProfileId;
 
-    public String gender;
+    public String musicbrainzArtistId;
 
-    public Integer age;
+    public String artistName;
 
-    public String country;
+    public String musicbrainzTrackId;
+
+    public String trackName;
 }
