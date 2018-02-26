@@ -3,6 +3,7 @@ package models;
 import javax.persistence.*;
 
 import io.ebean.*;
+
 import play.data.validation.*;
 
 @Entity
@@ -13,9 +14,9 @@ public class User extends Model {
     @Constraints.Required
     public String userProfileId;
 
-    public String gender;
+    public static final Finder<Long, User> find = new Finder<>(User.class);
 
-    public Integer age;
-
-    public String country;
+    public static User authenticate(String userProfileId) {
+        return find.query().where().eq("userProfileId", userProfileId).findOne();
+    }
 }

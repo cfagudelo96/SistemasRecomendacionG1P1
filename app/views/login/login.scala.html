@@ -1,0 +1,18 @@
+@(form: Form[User])
+
+@main("Login") {
+    <h1>Login</h1>
+
+    @helper.form(routes.LoginController.login()) {
+        @helper.CSRF.formField
+
+        <div class="form-group">
+            <label>
+                Nombre de usuario
+                <input type="text" name="userProfileId" class="form-control">
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    }
+}
