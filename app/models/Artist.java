@@ -16,4 +16,6 @@ public class Artist extends Model {
 
     @Constraints.Required
     public String artistName;
+
+    public static final Finder<Long, Artist> find = new Finder<>(Artist.class);
 }

@@ -1,6 +1,8 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.Recommender;
+import org.apache.mahout.cf.taste.impl.model.jdbc.PostgreSQLJDBCDataModel;
 import play.libs.Json;
 
 import models.User;
@@ -40,5 +42,15 @@ public class HomeController extends Controller {
         session().put("userProfileId", user.userProfileId);
 
         return ok(index.render("Your new application is ready."));
+    }
+
+    public Result test() {
+        Recommender recommender = new Recommender();
+        PostgreSQLJDBCDataModel pg = recommender.getDataModel();
+        if(pg != null) {
+            return ok("Si se pudo");
+        } else {
+            return ok("No se pudo");
+        }
     }
 }

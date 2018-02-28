@@ -7,6 +7,7 @@ import io.ebean.*;
 import play.data.validation.*;
 
 @Entity
+@Table(name="custom_user")
 public class User extends Model {
     @Id
     public Long id;

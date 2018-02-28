@@ -10,8 +10,9 @@ crossScalaVersions := Seq("2.11.12", "2.12.4")
 
 libraryDependencies += guice
 libraryDependencies += jdbc
-libraryDependencies += "com.h2database" % "h2" % "1.4.196"
+libraryDependencies += "org.postgresql" % "postgresql" % "42.1.1"
 libraryDependencies += "org.apache.mahout" % "mahout-core" % "0.9"
+libraryDependencies += "org.apache.mahout" % "mahout-integration" % "0.9"
 
 // Testing libraries for dealing with CompletionStage...
 libraryDependencies += "org.assertj" % "assertj-core" % "3.6.2" % Test

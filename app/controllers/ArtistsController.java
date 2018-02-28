@@ -8,6 +8,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class ArtistsController extends Controller {
     private Form<Artist> form;
@@ -15,6 +16,11 @@ public class ArtistsController extends Controller {
     @Inject
     public ArtistsController(final FormFactory formFactory) {
         this.form = formFactory.form(Artist.class);
+    }
+
+    public Result index() {
+        List<Artist> artists = Artist.find.all();
+        return ok(views.html.artists.index.render(artists));
     }
 
     public Result create() {
@@ -25,7 +31,7 @@ public class ArtistsController extends Controller {
             } else {
                 Artist artist = artistForm.get();
                 artist.save();
-                return ok();
+                return redirect("/artists");
             }
         } catch (Exception e) {
             flash("error", "Ocurrió un error al tratar de registrar el artista: " + e.getMessage());

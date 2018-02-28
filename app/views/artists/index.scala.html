@@ -1,0 +1,16 @@
+@(artists: List[Artist])
+
+@main("Artistas") {
+    <h1>Artistas</h1>
+
+    <ul class="list-group">
+        @for(artist <- artists) {
+            <li class="list-group-item">
+                @artist.artistName
+                <span class="float-right small">
+                    @artist.musicbrainzArtistId
+                </span>
+            </li>
+        }
+    </ul>
+}
