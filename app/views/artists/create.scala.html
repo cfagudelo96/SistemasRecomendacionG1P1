@@ -1,0 +1,25 @@
+@(form: Form[Artist])
+
+@main("Registrar artista") {
+    <h1>Registrar nuevo artista</h1>
+
+    @helper.form(routes.ArtistsController.create()) {
+        @helper.CSRF.formField
+
+        <div class="form-group">
+            <label>
+                Nombre del artista
+                <input type="text" name="artistName" class="form-control">
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label>
+                ID del artista en Musicbrainz
+                <input type="text" name="musicbrainzArtistId" class="form-control">
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Registrar</button>
+    }
+}

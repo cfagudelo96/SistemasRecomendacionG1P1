@@ -11,6 +11,7 @@ public class Artist extends Model {
     public Long id;
 
     @Constraints.Required
+    @Column(unique = true)
     public String musicbrainzArtistId;
 
     @Constraints.Required

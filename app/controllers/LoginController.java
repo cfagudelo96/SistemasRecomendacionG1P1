@@ -1,6 +1,7 @@
 package controllers;
 
 import models.User;
+
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
@@ -14,6 +15,23 @@ public class LoginController extends Controller {
     @Inject
     public LoginController(final FormFactory formFactory) {
         this.form = formFactory.form(User.class);
+    }
+
+    public Result signup() {
+        Form<User> userForm = form.bindFromRequest();
+        try {
+            if (userForm.hasErrors()) {
+                return badRequest(views.html.login.signup.render(userForm));
+            } else {
+                User user = userForm.get();
+                user.save();
+                flash("success", "Tu usuario fue creado exitósamente");
+                return redirect("/login");
+            }
+        } catch (Exception e) {
+            flash("error", "Ocurrió un error al tratar de registrarte: " + e.getMessage());
+            return badRequest(views.html.login.signup.render(userForm));
+        }
     }
 
     public Result login() {
@@ -30,13 +48,13 @@ public class LoginController extends Controller {
                 session().clear();
                 session().put("id", user.id.toString());
                 session().put("userProfileId", user.userProfileId);
-                return ok("Got user " + user);
+                return redirect("/");
             }
         }
     }
 
     public Result logout() {
         session().clear();
-        return ok();
+        return redirect("/");
     }
 }

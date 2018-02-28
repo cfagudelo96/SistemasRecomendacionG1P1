@@ -12,6 +12,7 @@ public class User extends Model {
     public Long id;
 
     @Constraints.Required
+    @Column(unique = true)
     public String userProfileId;
 
     public static final Finder<Long, User> find = new Finder<>(User.class);
