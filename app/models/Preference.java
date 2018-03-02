@@ -1,5 +1,6 @@
 package models;
 
+import io.ebean.Finder;
 import io.ebean.Model;
 import play.data.validation.Constraints;
 
@@ -21,4 +22,6 @@ public class Preference extends Model {
 
     @Constraints.Required
     public Double preference;
+
+    public static final Finder<Long, Preference> find = new Finder<>(Preference.class);
 }
