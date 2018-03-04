@@ -12,6 +12,9 @@ import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
+import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
+import java.io.File;
+
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -21,15 +24,17 @@ import java.util.List;
 public class RecommendationsController extends Controller {
     public Result userToUserRecommendation(int numberNeighbors) {
         try {
+
             Recommender r = new Recommender();
-            DataModel model= new FileDataModel(new File(""),"\t");
-            UserSimilarity similarity = new PearsonCorrelationSimilarity(dataModel);
-            UserNeighborhood neighborhood = new NearestNUserNeighborhood(numberNeighbors, similarity, dataModel);
-            UserBasedRecommender recommender = new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
+            DataModel model= new FileDataModel(new File("public/data.csv"),";");
+            UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
+            UserNeighborhood neighborhood = new NearestNUserNeighborhood(numberNeighbors, similarity, model);
+            UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
             Long uid = Long.parseLong(session("id"));
             List<RecommendedItem> recommendedItems = recommender.recommend(uid, 2);
             return ok(recommendedItems.toString());
         } catch (Exception e) {
+            e.printStackTrace();
             return badRequest();
         }
     }
