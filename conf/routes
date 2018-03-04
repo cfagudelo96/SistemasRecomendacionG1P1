@@ -9,7 +9,8 @@ GET     /signup                     controllers.LoginController.signup
 GET     /logout                     controllers.LoginController.logout
 GET     /artists                    controllers.ArtistsController.index
 GET     /artists/create             controllers.ArtistsController.create
-GET     /recommender/loadData       controllers.RecommendationsController.loadData
+GET     /recommender/userRecommendation           controllers.RecommendationsController.userToUserRecommendation
+GET     /recommender/temp           controllers.RecommendationsController.temp
 
 GET     /test                       controllers.HomeController.test
 

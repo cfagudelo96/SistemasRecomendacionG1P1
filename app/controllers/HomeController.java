@@ -25,10 +25,6 @@ public class HomeController extends Controller {
         return ok(index.render("Your new application is ready."));
     }
 
-    public Result loginForm() {
-        return ok();
-    }
-
     public Result login(){
         User userFromForm = Json.fromJson(request().body().asJson(), User.class);
         User user = User.authenticate(userFromForm.userProfileId);
