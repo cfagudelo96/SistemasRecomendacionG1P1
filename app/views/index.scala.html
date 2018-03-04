@@ -2,7 +2,7 @@
  * This template takes a single argument, a String containing a
  * message to display.
  *@
-@(message: String)
+@(message: String)(artistas: String)(vecinos: String)
 
 @*
  * Call the `main` template with two arguments. The first
@@ -30,6 +30,13 @@
 
             <button type="submit" class="btn btn-primary">Pedir Recomendación</button>
         </form>
+
+        @if(artistas != null){
+            <h3>Artistas sugeridos: </h3>
+            @artistas
+            <h3>Vecinos: </h3>
+            @vecinos
+        }
     } else {
         <h1>@message</h1>
     }

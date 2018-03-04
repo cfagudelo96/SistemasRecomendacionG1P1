@@ -22,7 +22,7 @@ public class HomeController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     public Result index() {
-        return ok(index.render("Logueate en el sistema para comenzar a recibir recomendaciones sobre artistas"));
+        return ok(index.render("Logueate en el sistema para comenzar a recibir recomendaciones sobre artistas",null,null));
     }
 
     public Result login(){
@@ -37,7 +37,7 @@ public class HomeController extends Controller {
         session().put("id", user.id.toString());
         session().put("userProfileId", user.userProfileId);
 
-        return ok(index.render("Your new application is ready."));
+        return ok(index.render("Your new application is ready.",null,null));
     }
 
     public Result test() {

@@ -4,6 +4,8 @@ import io.ebean.Expr;
 import models.Preference;
 import models.Recommender;
 import models.User;
+import models.Artist;
+
 import org.apache.mahout.cf.taste.impl.neighborhood.NearestNUserNeighborhood;
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
 import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
@@ -32,7 +34,25 @@ public class RecommendationsController extends Controller {
             UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
             Long uid = Long.parseLong(session("id"));
             List<RecommendedItem> recommendedItems = recommender.recommend(uid, 2);
-            return ok(recommendedItems.toString());
+
+            String vecinos = "";
+
+            String artistas = "";
+
+            int numeroVecinos = neighborhood.getUserNeighborhood(uid).length;
+
+            for ( int i = 0; i< numeroVecinos; i++) {
+                vecinos += "\n" + User.find.query().where().eq("id", neighborhood.getUserNeighborhood(uid)[i]).findOne().userProfileId;
+            }
+
+            Iterator<RecommendedItem> recommendedItemIterator = recommendedItems.iterator();
+            while (recommendedItemIterator.hasNext()) {
+                RecommendedItem item = recommendedItemIterator.next();
+
+                artistas += "\n" + Artist.find.query().where().eq("id",item.getItemID()).findOne().artistName;
+            }
+
+            return ok(views.html.index.render("Logueate en el sistema para comenzar a recibir recomendaciones sobre artistas",artistas,vecinos));
         } catch (Exception e) {
             e.printStackTrace();
             return badRequest();
