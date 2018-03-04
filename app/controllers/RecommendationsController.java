@@ -14,8 +14,6 @@ import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
-import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
-import java.io.File;
 
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -26,9 +24,7 @@ import java.util.List;
 public class RecommendationsController extends Controller {
     public Result userToUserRecommendation(int numberNeighbors) {
         try {
-
-            Recommender r = new Recommender();
-            DataModel model= new FileDataModel(new File("public/data.csv"),";");
+            DataModel model = Recommender.getInstance().getDataModel();
             UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
             UserNeighborhood neighborhood = new NearestNUserNeighborhood(numberNeighbors, similarity, model);
             UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
@@ -42,14 +38,14 @@ public class RecommendationsController extends Controller {
             int numeroVecinos = neighborhood.getUserNeighborhood(uid).length;
 
             for ( int i = 0; i< numeroVecinos; i++) {
-                vecinos += "\n" + User.find.query().where().eq("id", neighborhood.getUserNeighborhood(uid)[i]).findOne().userProfileId;
+                vecinos += " - " + User.find.query().where().eq("id", neighborhood.getUserNeighborhood(uid)[i]).findOne().userProfileId;
             }
 
             Iterator<RecommendedItem> recommendedItemIterator = recommendedItems.iterator();
             while (recommendedItemIterator.hasNext()) {
                 RecommendedItem item = recommendedItemIterator.next();
 
-                artistas += "\n" + Artist.find.query().where().eq("id",item.getItemID()).findOne().artistName;
+                artistas += " - " + Artist.find.query().where().eq("id",item.getItemID()).findOne().artistName;
             }
 
             return ok(views.html.index.render("Logueate en el sistema para comenzar a recibir recomendaciones sobre artistas",artistas,vecinos));

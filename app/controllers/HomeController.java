@@ -2,7 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Recommender;
-import org.apache.mahout.cf.taste.impl.model.jdbc.PostgreSQLJDBCDataModel;
+import org.apache.mahout.cf.taste.model.DataModel;
 import play.libs.Json;
 
 import models.User;
@@ -41,9 +41,9 @@ public class HomeController extends Controller {
     }
 
     public Result test() {
-        Recommender recommender = new Recommender();
-        PostgreSQLJDBCDataModel pg = recommender.getDataModel();
-        if(pg != null) {
+
+        DataModel file = Recommender.getInstance().getDataModel();
+        if(file != null) {
             return ok("Si se pudo");
         } else {
             return ok("No se pudo");

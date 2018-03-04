@@ -1,30 +1,33 @@
 package models;
 
-import org.apache.mahout.cf.taste.impl.model.jdbc.PostgreSQLJDBCDataModel;
-import org.postgresql.ds.PGSimpleDataSource;
 
-import javax.sql.DataSource;
+import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
+import java.io.File;
+import org.apache.mahout.cf.taste.model.DataModel;
+
 
 public class Recommender {
 
-    public Recommender() {}
+    private static Recommender instance = null;
 
-    public PostgreSQLJDBCDataModel getDataModel() {
+    private DataModel model;
+
+    protected Recommender() {
         try {
-            PostgreSQLJDBCDataModel dataModel = new PostgreSQLJDBCDataModel(getDataSource());
-            return dataModel;
+            model= new FileDataModel(new File("public/data.csv"),";");
+            System.out.println("Creado");
         } catch (Exception e) {
-            return null;
+            e.printStackTrace();
         }
     }
+    public static Recommender getInstance() {
+        if(instance == null) {
+            instance = new Recommender();
+        }
+        return instance;
+    }
 
-    private DataSource getDataSource() {
-        PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setServerName("localhost");
-        dataSource.setPortNumber(5432);
-        dataSource.setDatabaseName("SistemasRecomendacion");
-        dataSource.setUser("SistemasRecomendacion");
-        dataSource.setPassword("Grupo1");
-        return dataSource;
+    public DataModel getDataModel() {
+        return model;
     }
 }
