@@ -15,15 +15,15 @@ import play.mvc.Result;
 import java.util.List;
 
 public class RecommendationsController extends Controller {
-    public Result userToUserRecommendation() {
+    public Result userToUserRecommendation(int numberNeighbors) {
         try {
             Recommender r = new Recommender();
-            DataModel dataModel = r.getDataModel();
+            DataModel model= new FileDataModel(new File(""),"\t");
             UserSimilarity similarity = new PearsonCorrelationSimilarity(dataModel);
-            UserNeighborhood neighborhood = new NearestNUserNeighborhood(10, similarity, dataModel);
+            UserNeighborhood neighborhood = new NearestNUserNeighborhood(numberNeighbors, similarity, dataModel);
             UserBasedRecommender recommender = new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
             Long uid = Long.parseLong(session("id"));
-            List<RecommendedItem> recommendedItems = recommender.recommend(uid, 5);
+            List<RecommendedItem> recommendedItems = recommender.recommend(uid, 2);
             return ok(recommendedItems.toString());
         } catch (Exception e) {
             return badRequest();
@@ -38,5 +38,9 @@ public class RecommendationsController extends Controller {
         } catch (Exception e) {
             return badRequest("Ocurrió un error: " + e.getMessage());
         }
+    }
+
+    public Result recommend(int numberNeighbors) {
+        return userToUserRecommendation(numberNeighbors);
     }
 }

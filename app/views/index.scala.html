@@ -15,5 +15,22 @@
      * Get an `Html` object by calling the built-in Play welcome
      * template and passing a `String` message.
      *@
-    <h1>@message</h1>
+
+
+    @if(session.get("id") != null) {
+        <h1>Buscar una nueva recomendación</h1>
+        <form id="myAjaxDrivenForm" action="\recommend" method="get">
+
+            <div class="form-group">
+                <label>
+                    Numero de Vecinos:
+                    <input type="number" name="numberNeighbors" class="form-control">
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Pedir Recomendación</button>
+        </form>
+    } else {
+        <h1>@message</h1>
+    }
 }
