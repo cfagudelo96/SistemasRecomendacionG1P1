@@ -25,10 +25,6 @@ public class HomeController extends Controller {
         return ok(index.render("Logueate en el sistema para comenzar a recibir recomendaciones sobre artistas"));
     }
 
-    public Result loginForm() {
-        return ok();
-    }
-
     public Result login(){
         User userFromForm = Json.fromJson(request().body().asJson(), User.class);
         User user = User.authenticate(userFromForm.userProfileId);
