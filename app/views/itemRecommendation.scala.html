@@ -9,7 +9,13 @@
             <div class="form-group">
                 <label>
                     Número de recomendaciones:
-                    <input type="number" name="number" min="1" required class="form-control">
+                    <input type="number" name="number" min="1"  class="form-control" required>
+                        Medida de similitud:
+                        <select name="medidaSimilitud">
+                            <option value="Coseno">Coseno</option>
+                            <option value="Tanimoto">Tanimoto</option>
+                            <option value="Pearson">Pearson</option>
+                        </select>
                 </label>
             </div>
 

@@ -109,14 +109,21 @@ public class RecommendationsController extends Controller {
         }
     }
 
-    public Result itemRecommendation(String snumber) {
+    public Result itemRecommendation(String snumber, String medidaSimilitud) {
         if(snumber == null) {
             return ok(itemRecommendation.render(null));
         } else {
             try {
                 Integer number = Integer.parseInt(snumber);
                 DataModel model = Recommender.getInstance().getDataModel();
-                ItemSimilarity itemSimilarity = new UncenteredCosineSimilarity(model);
+                ItemSimilarity itemSimilarity = null;
+                if(medidaSimilitud.equals("Coseno")){
+                    itemSimilarity = new TanimotoCoefficientSimilarity(model);
+                } else if(medidaSimilitud.equals("Pearson")) {
+                    itemSimilarity = new PearsonCorrelationSimilarity(model);
+                } else {
+                    itemSimilarity = new UncenteredCosineSimilarity(model);
+                }
                 ItemBasedRecommender recommender = new GenericItemBasedRecommender(model, itemSimilarity);
                 Long uid = Long.parseLong(session("id"));
                 List<RecommendedItem> recommendations = recommender.recommend(uid, number);
