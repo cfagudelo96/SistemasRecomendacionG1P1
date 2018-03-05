@@ -21,13 +21,16 @@
                 <p>Selecciona un artista de la lista de artistas, puedes escribir el nombre para buscarlo, luego dale una calificación y da click en clasificar.</p>
                 <form id="myAjaxDrivenForm" action="/recommender/add" method="get">
                     <div class="form-group">
-                        <input type="text" name="artistName" list="artistList">
+                        <p>Artista:</p>
+                        <input type="text" name="artistName" list="artistList" required>
                         <datalist name="artistName" id="artistList">
                         @for(artista <- artists) {
                             <option value="@artista.artistName">@artista.artistName</option>
                         }
                         </datalist>
-                        <input type="number" name="rating" class="form-control">
+                        <br>
+                        <p>Calificación:</p>
+                        <input pattern="^1|2|3|4|5$" type="number" name="rating" class="form-control" required>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Calificar</button>
