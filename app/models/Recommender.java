@@ -33,10 +33,10 @@ public class Recommender {
 
     public static void addPreference(Long idUsuario, Long idArtista, float rating) {
         if(instance == null) {
-            Recommender.getInstance();
+            instance = new Recommender();
         } else {
             try {
-                instance.getDataModel().setPreference(idUsuario, idArtista, rating);
+                instance = new Recommender();
             } catch (Exception e) {
                 e.printStackTrace();
             }
