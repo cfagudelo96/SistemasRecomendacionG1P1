@@ -5,7 +5,7 @@ import models.Preference;
 import models.Recommender;
 import models.User;
 import models.Artist;
-
+import java.io.*;
 import org.apache.mahout.cf.taste.impl.neighborhood.NearestNUserNeighborhood;
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
 import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
@@ -18,8 +18,7 @@ import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class RecommendationsController extends Controller {
     public Result userToUserRecommendation(int numberNeighbors) {
@@ -31,24 +30,22 @@ public class RecommendationsController extends Controller {
             Long uid = Long.parseLong(session("id"));
             List<RecommendedItem> recommendedItems = recommender.recommend(uid, 2);
 
-            String vecinos = "";
-
-            String artistas = "";
-
-            int numeroVecinos = neighborhood.getUserNeighborhood(uid).length;
-
-            for ( int i = 0; i< numeroVecinos; i++) {
-                vecinos += " - " + User.find.query().where().eq("id", neighborhood.getUserNeighborhood(uid)[i]).findOne().userProfileId;
-            }
+            List<String> artistas= new ArrayList();
 
             Iterator<RecommendedItem> recommendedItemIterator = recommendedItems.iterator();
             while (recommendedItemIterator.hasNext()) {
                 RecommendedItem item = recommendedItemIterator.next();
-
-                artistas += " - " + Artist.find.query().where().eq("id",item.getItemID()).findOne().artistName;
+                artistas.add(Artist.find.byId(item.getItemID()).artistName + " - "+item.getValue());
             }
 
-            return ok(views.html.index.render("Logueate en el sistema para comenzar a recibir recomendaciones sobre artistas",artistas,vecinos));
+            List<User> vecinos = new ArrayList();
+
+            int numeroVecinos = neighborhood.getUserNeighborhood(uid).length;
+            for ( int i = 0; i< numeroVecinos; i++) {
+                vecinos.add(User.find.byId(neighborhood.getUserNeighborhood(uid)[i]));
+            }
+
+            return ok(views.html.index.render("",artistas,vecinos,User.find.byId(Long.parseLong(session().get("id")))));
         } catch (Exception e) {
             e.printStackTrace();
             return badRequest();
@@ -78,4 +75,22 @@ public class RecommendationsController extends Controller {
     public Result recommend(int numberNeighbors) {
         return userToUserRecommendation(numberNeighbors);
     }
+
+    public Result add(String artistName, int rating) {
+        try {
+            Long idArtist = Artist.find.query().where().eq("artistName", artistName).findOne().id;
+            PrintWriter printWriter = new PrintWriter(new FileOutputStream(
+                    new File("public/data.csv"),
+                    true /* append = true */));
+            printWriter.print("\n"+session().get("id")+";"+idArtist+";"+rating);
+            printWriter.close();
+
+            flash("success", "Se agrego el rating del artista");
+            return redirect("/users/history");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return badRequest();
+        }
+    }
+
 }

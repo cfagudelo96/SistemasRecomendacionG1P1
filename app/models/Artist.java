@@ -18,4 +18,5 @@ public class Artist extends Model {
     public String artistName;
 
     public static final Finder<Long, Artist> find = new Finder<>(Artist.class);
+
 }

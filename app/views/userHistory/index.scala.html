@@ -1,0 +1,40 @@
+@(user: User)(artists: List[Artist])
+
+@main("User History") {
+    <h1>Información del Usuario</h1>
+    <br>
+    <h3>Los Artistas que te gustan: </h3>
+    <div class="row">
+        @for(preference <- user.preferences) {
+            <div class="col-md-3">
+                <strong>@Artist.find.byId(preference.itemId).artistName</strong>
+                <br>
+                @preference.preference
+            </div>
+        }
+    </div>
+    <br>
+    <section id="calificar">
+        <h3>Califica a Artistas</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <form id="myAjaxDrivenForm" action="/recommender/add" method="get">
+                    <div class="form-group">
+                        <input type="text" name="artistName" list="artistList">
+                        <datalist name="artistName" id="artistList">
+                        @for(artista <- artists) {
+                            <option value="@artista.artistName">@artista.artistName</option>
+                        }
+                        </datalist>
+                        <input type="number" name="rating" class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Calificar</button>
+                </form>
+                <br>
+            </div>
+        </div>
+    </section>
+
+
+}

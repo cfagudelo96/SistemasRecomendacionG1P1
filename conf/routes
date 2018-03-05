@@ -9,8 +9,11 @@ GET     /signup                     controllers.LoginController.signup
 GET     /logout                     controllers.LoginController.logout
 GET     /artists                    controllers.ArtistsController.index
 GET     /artists/create             controllers.ArtistsController.create
-GET     /recommender/recommend     controllers.RecommendationsController.recommend(numberNeighbors:Integer)
+GET     /users/history              controllers.UserHistoryController.index
+
+GET     /recommender/recommend      controllers.RecommendationsController.recommend(numberNeighbors:Integer)
 GET     /recommender/temp           controllers.RecommendationsController.temp
+GET     /recommender/add            controllers.RecommendationsController.add(artistName:String,rating:Integer)
 
 GET     /test                       controllers.HomeController.test
 

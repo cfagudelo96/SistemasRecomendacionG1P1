@@ -2,7 +2,8 @@
  * This template takes a single argument, a String containing a
  * message to display.
  *@
-@(message: String)(artistas: String)(vecinos: String)
+@import java.util.List;
+@(message: String)(artistas: List[String])(vecinos: List[User])(user: User)
 
 @*
  * Call the `main` template with two arguments. The first
@@ -32,10 +33,51 @@
         </form>
 
         @if(artistas != null){
-            <h3>Artistas sugeridos: </h3>
-            @artistas
+            <br>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Artistas sugeridos: </h3>
+                    <div class="row">
+                        @for(artista <- artistas) {
+                            <div class="col-md-3">
+                                @artista
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>Los Artistas que más te gustan: </h3>
+                    <div class="row">
+                        @for(preference <- user.topPreferences) {
+                            <div class="col-md-3">
+                                <strong>@Artist.find.byId(preference.itemId).artistName</strong>
+                                <br>
+                                @preference.preference
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
             <h3>Vecinos: </h3>
-            @vecinos
+            <div class="row">
+            @for(vecino <- vecinos) {
+                <div class="col-md-4 card">
+                    <h5 class="card-header">@vecino.userProfileId</h5>
+                    <div class="card-block">
+                        <div class="row">
+                            @for(preference <- vecino.topPreferences) {
+                                <div class="col-md-3">
+                                    <strong>@Artist.find.byId(preference.itemId).artistName</strong>
+                                    <br>
+                                    @preference.preference
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            </div>
         }
     } else {
         <h1>@message</h1>
