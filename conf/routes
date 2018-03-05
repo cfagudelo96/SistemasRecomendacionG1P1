@@ -6,7 +6,7 @@ GET     /artists                    controllers.ArtistsController.index
 GET     /artists/create             controllers.ArtistsController.create
 GET     /users/history              controllers.UserHistoryController.index
 
-GET     /recommender/recommend      controllers.RecommendationsController.recommend(numberNeighbors:Integer, numberRecommended: Integer, medidaSimilitud:String)
+GET     /recommender/recommend      controllers.RecommendationsController.userToUserRecommendation(numberNeighbors:Integer, numberRecommended: Integer, medidaSimilitud:String)
 
 GET     /recommender/itemRecommendation     controllers.RecommendationsController.itemRecommendation(number ?= null)
 GET     /recommender/add            controllers.RecommendationsController.add(artistName:String,rating:Integer)

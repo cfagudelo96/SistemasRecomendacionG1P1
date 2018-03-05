@@ -30,10 +30,17 @@ import views.html.itemRecommendation;
 import java.util.*;
 
 public class RecommendationsController extends Controller {
-    public Result PearsonRecommendation(int numberNeighbors, int numberRecommended) {
+    public Result userToUserRecommendation(int numberNeighbors, int numberRecommended, String medidaSimilitud) {
         try {
             DataModel model = Recommender.getInstance().getDataModel();
-            UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
+            UserSimilarity similarity = null;
+            if(medidaSimilitud.equals("Coseno")){
+                similarity = new TanimotoCoefficientSimilarity(model);
+            } else if(medidaSimilitud.equals("Pearson")) {
+                similarity = new PearsonCorrelationSimilarity(model);
+            } else {
+                similarity = new UncenteredCosineSimilarity(model);
+            }
             UserNeighborhood neighborhood = new NearestNUserNeighborhood(numberNeighbors, similarity, model);
             UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
             Long uid = Long.parseLong(session("id"));
@@ -61,67 +68,7 @@ public class RecommendationsController extends Controller {
         }
     }
 
-    public Result CosenoRecommendation(int numberNeighbors, int numberRecommended) {
-        try {
-            DataModel model = Recommender.getInstance().getDataModel();
-            UserSimilarity similarity = new UncenteredCosineSimilarity(model);
-            UserNeighborhood neighborhood = new NearestNUserNeighborhood(numberNeighbors, similarity, model);
-            UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
-            Long uid = Long.parseLong(session("id"));
-            List<RecommendedItem> recommendedItems = recommender.recommend(uid, numberRecommended);
 
-            List<String> artistas= new ArrayList();
-
-            Iterator<RecommendedItem> recommendedItemIterator = recommendedItems.iterator();
-            while (recommendedItemIterator.hasNext()) {
-                RecommendedItem item = recommendedItemIterator.next();
-                artistas.add(Artist.find.byId(item.getItemID()).artistName + " - "+item.getValue());
-            }
-
-            List<User> vecinos = new ArrayList();
-
-            int numeroVecinos = neighborhood.getUserNeighborhood(uid).length;
-            for ( int i = 0; i< numeroVecinos; i++) {
-                vecinos.add(User.find.byId(neighborhood.getUserNeighborhood(uid)[i]));
-            }
-
-            return ok(views.html.index.render("",artistas,vecinos,User.find.byId(Long.parseLong(session().get("id")))));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return badRequest();
-        }
-    }
-
-    public Result TanimotoRecommendation(int numberNeighbors, int numberRecommended) {
-        try {
-            DataModel model = Recommender.getInstance().getDataModel();
-            UserSimilarity similarity = new TanimotoCoefficientSimilarity(model);
-            UserNeighborhood neighborhood = new NearestNUserNeighborhood(numberNeighbors, similarity, model);
-            UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
-            Long uid = Long.parseLong(session("id"));
-            List<RecommendedItem> recommendedItems = recommender.recommend(uid, numberRecommended);
-
-            List<String> artistas= new ArrayList();
-
-            Iterator<RecommendedItem> recommendedItemIterator = recommendedItems.iterator();
-            while (recommendedItemIterator.hasNext()) {
-                RecommendedItem item = recommendedItemIterator.next();
-                artistas.add(Artist.find.byId(item.getItemID()).artistName + " - "+item.getValue());
-            }
-
-            List<User> vecinos = new ArrayList();
-
-            int numeroVecinos = neighborhood.getUserNeighborhood(uid).length;
-            for ( int i = 0; i< numeroVecinos; i++) {
-                vecinos.add(User.find.byId(neighborhood.getUserNeighborhood(uid)[i]));
-            }
-
-            return ok(views.html.index.render("",artistas,vecinos,User.find.byId(Long.parseLong(session().get("id")))));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return badRequest();
-        }
-    }
 
     public Result temp() {
         List<User> users = User.find.all();
@@ -141,16 +88,6 @@ public class RecommendationsController extends Controller {
             }
         }
         return ok("Se eliminó a la verga");
-    }
-
-    public Result recommend(int numberNeighbors, int numberRecommended, String medidaSimilitud) {
-        if(medidaSimilitud.equals("Coseno")){
-            return CosenoRecommendation(numberNeighbors, numberRecommended);
-        } else if(medidaSimilitud.equals("Pearson")) {
-            return PearsonRecommendation(numberNeighbors, numberRecommended);
-        } else {
-            return TanimotoRecommendation(numberNeighbors, numberRecommended);
-        }
     }
 
     public Result add(String artistName, int rating) {
