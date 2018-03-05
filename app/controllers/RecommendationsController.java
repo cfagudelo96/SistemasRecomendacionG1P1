@@ -27,14 +27,14 @@ import views.html.itemRecommendation;
 import java.util.*;
 
 public class RecommendationsController extends Controller {
-    public Result userToUserRecommendation(int numberNeighbors) {
+    public Result userToUserRecommendation(int numberNeighbors, int numberRecommended) {
         try {
             DataModel model = Recommender.getInstance().getDataModel();
             UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
             UserNeighborhood neighborhood = new NearestNUserNeighborhood(numberNeighbors, similarity, model);
             UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
             Long uid = Long.parseLong(session("id"));
-            List<RecommendedItem> recommendedItems = recommender.recommend(uid, 2);
+            List<RecommendedItem> recommendedItems = recommender.recommend(uid, numberRecommended);
 
             List<String> artistas= new ArrayList();
 
@@ -78,8 +78,8 @@ public class RecommendationsController extends Controller {
         return ok("Se eliminó a la verga");
     }
 
-    public Result recommend(int numberNeighbors) {
-        return userToUserRecommendation(numberNeighbors);
+    public Result recommend(int numberNeighbors, int numberRecommended) {
+        return userToUserRecommendation(numberNeighbors, numberRecommended);
     }
 
     public Result add(String artistName, int rating) {

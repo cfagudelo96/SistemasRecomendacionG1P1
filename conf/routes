@@ -7,5 +7,10 @@ GET     /artists/create             controllers.ArtistsController.create
 GET     /users/history              controllers.UserHistoryController.index
 
 GET     /recommender/recommend      controllers.RecommendationsController.recommend(numberNeighbors:Integer, numberRecommended: Integer)
+
 GET     /recommender/itemRecommendation     controllers.RecommendationsController.itemRecommendation(number ?= null)
-GET     /recommender/temp           controllers.RecommendationsController.temp
+GET     /recommender/add            controllers.RecommendationsController.add(artistName:String,rating:Integer)
+
+GET     /test                       controllers.HomeController.test
+
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
