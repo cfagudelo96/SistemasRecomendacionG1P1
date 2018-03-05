@@ -11,6 +11,7 @@ GET     /artists                    controllers.ArtistsController.index
 GET     /artists/create             controllers.ArtistsController.create
 GET     /users/history              controllers.UserHistoryController.index
 
+GET     /recommender/itemRecommendation     controllers.RecommendationsController.itemRecommendation(number ?= null)
 GET     /recommender/recommend      controllers.RecommendationsController.recommend(numberNeighbors:Integer)
 GET     /recommender/temp           controllers.RecommendationsController.temp
 GET     /recommender/add            controllers.RecommendationsController.add(artistName:String,rating:Integer)

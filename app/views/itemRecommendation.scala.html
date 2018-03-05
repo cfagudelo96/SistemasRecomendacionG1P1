@@ -1,0 +1,34 @@
+@(artists: List[String])
+
+@main("Item recommendation") {
+    <h1>Recomendación basada en ítems</h1>
+
+    @if(session.get("id") != null) {
+        <form id="myAjaxDrivenForm" action="/recommender/itemRecommendation" method="get">
+
+            <div class="form-group">
+                <label>
+                    Número de recomendaciones:
+                    <input type="number" name="number" min="1" required class="form-control">
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Pedir recomendaciones</button>
+        </form>
+
+        <br/>
+
+        @if(artists != null) {
+            <ul class="list-group">
+            @for(artist <- artists) {
+                <li class="list-group-item">
+                @artist
+                </li>
+            }
+            </ul>
+        }
+    } else {
+        <h4>Por favor inicia sesión para poder recomendarte artistas</h4>
+    }
+}
+

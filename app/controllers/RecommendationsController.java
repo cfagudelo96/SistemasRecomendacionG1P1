@@ -7,16 +7,22 @@ import models.User;
 import models.Artist;
 import java.io.*;
 import org.apache.mahout.cf.taste.impl.neighborhood.NearestNUserNeighborhood;
+import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
 import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.UncenteredCosineSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
+import org.apache.mahout.cf.taste.recommender.ItemBasedRecommender;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
+import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 
 import play.mvc.Controller;
 import play.mvc.Result;
+import scala.Int;
+import views.html.itemRecommendation;
 
 import java.util.*;
 
@@ -92,6 +98,32 @@ public class RecommendationsController extends Controller {
         } catch (Exception e) {
             e.printStackTrace();
             return badRequest();
+        }
+    }
+
+    public Result itemRecommendation(String snumber) {
+        if(snumber == null) {
+            return ok(itemRecommendation.render(null));
+        } else {
+            try {
+                Integer number = Integer.parseInt(snumber);
+                DataModel model = Recommender.getInstance().getDataModel();
+                ItemSimilarity itemSimilarity = new UncenteredCosineSimilarity(model);
+                ItemBasedRecommender recommender = new GenericItemBasedRecommender(model, itemSimilarity);
+                Long uid = Long.parseLong(session("id"));
+                List<RecommendedItem> recommendations = recommender.recommend(uid, number);
+                List<String> artistsRecommendations = new ArrayList<>();
+                Iterator<RecommendedItem> recommendedItemIterator = recommendations.iterator();
+                while (recommendedItemIterator.hasNext()) {
+                    RecommendedItem recommendedItem = recommendedItemIterator.next();
+                    Artist artist = Artist.find.byId(recommendedItem.getItemID());
+                    float value = recommendedItem.getValue();
+                    artistsRecommendations.add(artist.artistName + " - " + value);
+                }
+                return ok(itemRecommendation.render(artistsRecommendations));
+            } catch (Exception e) {
+                return badRequest(e.getMessage());
+            }
         }
     }
 
