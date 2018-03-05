@@ -30,4 +30,16 @@ public class Recommender {
     public DataModel getDataModel() {
         return model;
     }
+
+    public static void addPreference(Long idUsuario, Long idArtista, float rating) {
+        if(instance == null) {
+            Recommender.getInstance();
+        } else {
+            try {
+                instance.getDataModel().setPreference(idUsuario, idArtista, rating);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

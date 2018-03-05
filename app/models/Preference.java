@@ -23,5 +23,11 @@ public class Preference extends Model {
     @Constraints.Required
     public Double preference;
 
+    public Preference (Long userId, Long itemId, Double preference){
+        this.userId = userId;
+        this.itemId = itemId;
+        this.preference = preference;
+    }
+
     public static final Finder<Long, Preference> find = new Finder<>(Preference.class);
 }

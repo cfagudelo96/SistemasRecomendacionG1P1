@@ -84,7 +84,9 @@ public class RecommendationsController extends Controller {
                     true /* append = true */));
             printWriter.print("\n"+session().get("id")+";"+idArtist+";"+rating);
             printWriter.close();
-
+            Recommender.addPreference(Long.parseLong(session().get("id")),idArtist,(float) rating);
+            Preference nueva = new Preference(Long.parseLong(session().get("id")),idArtist,(double) rating);
+            nueva.save();
             flash("success", "Se agrego el rating del artista");
             return redirect("/users/history");
         } catch (Exception e) {
