@@ -20,20 +20,31 @@
 
     @if(session.get("id") != null) {
         <h1>Buscar una nueva recomendación</h1>
-        <form id="myAjaxDrivenForm" action="/recommender/recommend" method="get">
+        <div class="row">
+            <form id="myAjaxDrivenForm" action="/recommender/recommend" method="get">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label>
+                            Numero de Vecinos:
+                            <input type="number" name="numberNeighbors" class="form-control" required>
+                            Numero de recomendaciones:
+                            <input type="number" name="numberRecommended" class="form-control" required>
 
-            <div class="form-group">
-                <label>
-                    Numero de Vecinos:
-                    <input type="number" name="numberNeighbors" class="form-control" required>
-                        Numero de recomendaciones:
-                        <input type="number" name="numberRecommended" class="form-control" required>
+                        </label>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="medidaSimilitud">
+                            <option value="coseno">coseno</option>
+                            <option value="tanimoto">tanimoto</option>
+                            <option value="pearson">pearson</option>
+                        </select>
+                    </div>
+                </div>
 
-                </label>
-            </div>
+                <button type="submit" class="btn btn-primary">Pedir Recomendación</button>
+            </form>
+        </div>
 
-            <button type="submit" class="btn btn-primary">Pedir Recomendación</button>
-        </form>
 
         @if(artistas != null){
             <br>
