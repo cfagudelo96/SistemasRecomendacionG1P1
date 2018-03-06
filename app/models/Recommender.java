@@ -14,8 +14,7 @@ public class Recommender {
 
     protected Recommender() {
         try {
-            model= new FileDataModel(new File("public/data.csv"),";");
-            System.out.println("Creado");
+            model= new FileDataModel(new File("./data.csv"),";");
         } catch (Exception e) {
             e.printStackTrace();
         }
